@@ -22,13 +22,42 @@ export default function Home() {
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = () => {
+    const filteredBooks = books.filter(
+      (book) =>
+        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchResults(filteredBooks);
+  };
+
+  // useEffect(() => {
+  //   handleSearch();
+  // }, [searchTerm]);
+
   return (
-    <div className="relative ... max-w-3xl mx-auto bg-white ml-auto">
-      <h1 className="text-center p-10">Book Details</h1>
+    <div className="max-w-4xl m-auto ">
+      <div className="max-w-xl gap-1 mt-5 ml-auto flex">
+        <input
+          className="p-2 rounded-md "
+          type="text"
+          placeholder="Search by title or author"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button className="bg-slate-200 p-2 rounded-lg " onClick={handleSearch}>
+          Search
+        </button>
+      </div>
       <div className="flex gap-3 p-3 flex-wrap">
-        {books.map((book) => (
-          <BookItem key={book.book_id} book={book} />
-        ))}
+        {searchTerm
+          ? searchResults.map((book) => (
+              <BookItem key={book.book_id} book={book} />
+            ))
+          : books.map((book) => <BookItem key={book.book_id} book={book} />)}
       </div>
     </div>
   );
